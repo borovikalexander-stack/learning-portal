@@ -1,0 +1,23 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    env_file: .env
+    volumes:
+      - ./public/uploads/avatars:/app/public/uploads/avatars
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres-data:

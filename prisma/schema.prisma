@@ -1,0 +1,250 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  CURATOR
+  ROP
+}
+
+enum UserStatus {
+  PENDING
+  ACTIVE
+  BLOCKED
+}
+
+enum CourseStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum LessonType {
+  VIDEO
+  TEXT
+  MIXED
+}
+
+enum QuestionType {
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+  TEXT
+  MATCHING
+}
+
+enum ReviewStatus {
+  NOT_REQUIRED
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum CourseAccessSource {
+  DEPARTMENT_DEFAULT
+  MANUAL_GRANT
+}
+
+enum OnboardingStatus {
+  PENDING_VIDEO
+  ACCEPTED
+  DECLINED
+}
+
+model Department {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String?
+  users       User[]
+  courses     Course[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model User {
+  id              String           @id @default(cuid())
+  email           String           @unique
+  passwordHash    String
+  firstName       String
+  lastName        String
+  avatarUrl       String?
+  role            UserRole         @default(MANAGER)
+  status          UserStatus       @default(PENDING)
+  onboardingStatus OnboardingStatus @default(ACCEPTED)
+  declinedOnboardingBefore Boolean  @default(false)
+  departmentId    String?
+  department      Department?      @relation(fields: [departmentId], references: [id])
+  requestedDept   String?
+  courseAccesses  CourseAccess[]
+  enrollments     Enrollment[]
+  lessonProgress  LessonProgress[]
+  testAttempts    TestAttempt[]
+  reviewedAnswers AnswerAttempt[]  @relation("ReviewedAnswers")
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model Settings {
+  id                    String   @id @default(cuid())
+  onboardingKinescopeId String?
+  onboardingTitle       String   @default("Добро пожаловать в команду")
+  onboardingText        String   @default("Посмотрите обращение основателя и подтвердите, что разделяете наши ценности.")
+  declineMessage        String   @default("Спасибо за честность! Если передумаете — нажмите «Попробовать снова».")
+  updatedAt             DateTime @updatedAt
+  createdAt             DateTime @default(now())
+}
+
+model Course {
+  id              String         @id @default(cuid())
+  slug            String         @unique
+  title           String
+  description     String
+  departmentId    String
+  department      Department     @relation(fields: [departmentId], references: [id])
+  status          CourseStatus   @default(DRAFT)
+  isDefault       Boolean        @default(true)
+  estimatedMins   Int            @default(60)
+  accent          String         @default("#0066CC")
+  lessons         Lesson[]
+  tests           Test[]
+  courseAccesses  CourseAccess[]
+  enrollments     Enrollment[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+model Lesson {
+  id             String           @id @default(cuid())
+  courseId       String
+  course         Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title          String
+  type           LessonType       @default(VIDEO)
+  order          Int
+  durationMins   Int              @default(10)
+  kinescopeId    String?
+  markdown       String?
+  attachments    LessonAttachment[]
+  progress       LessonProgress[]
+  test           Test?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@unique([courseId, order])
+}
+
+model LessonAttachment {
+  id        String   @id @default(cuid())
+  lessonId  String
+  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  title     String
+  url       String
+  createdAt DateTime @default(now())
+}
+
+model CourseAccess {
+  id        String             @id @default(cuid())
+  userId    String
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId  String
+  course    Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  source    CourseAccessSource
+  grantedBy String?
+  createdAt DateTime           @default(now())
+
+  @@unique([userId, courseId])
+}
+
+model Enrollment {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId      String
+  course        Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  progress      Int      @default(0)
+  completedAt   DateTime?
+  lastLessonId  String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([userId, courseId])
+}
+
+model LessonProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonId    String
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  isCompleted Boolean  @default(false)
+  secondsSeen Int      @default(0)
+  completedAt DateTime?
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, lessonId])
+}
+
+model Test {
+  id             String        @id @default(cuid())
+  courseId       String
+  course         Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessonId       String?       @unique
+  lesson         Lesson?       @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  title          String
+  passPercent    Int           @default(70)
+  maxAttempts    Int           @default(2)
+  timeLimitMins  Int?
+  questions      Question[]
+  attempts       TestAttempt[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model Question {
+  id           String       @id @default(cuid())
+  testId       String
+  test         Test         @relation(fields: [testId], references: [id], onDelete: Cascade)
+  type         QuestionType
+  prompt       String
+  order        Int
+  points       Int          @default(1)
+  options      Json?
+  answerKey    Json?
+  attempts     AnswerAttempt[]
+
+  @@unique([testId, order])
+}
+
+model TestAttempt {
+  id            String          @id @default(cuid())
+  userId        String
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  testId        String
+  test          Test            @relation(fields: [testId], references: [id], onDelete: Cascade)
+  scorePercent  Int?
+  reviewStatus  ReviewStatus    @default(NOT_REQUIRED)
+  passed        Boolean         @default(false)
+  submittedAt   DateTime        @default(now())
+  answers       AnswerAttempt[]
+}
+
+model AnswerAttempt {
+  id            String       @id @default(cuid())
+  attemptId     String
+  attempt       TestAttempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  questionId    String
+  question      Question     @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  value         Json
+  isCorrect     Boolean?
+  reviewStatus  ReviewStatus @default(NOT_REQUIRED)
+  reviewComment String?
+  reviewedById  String?
+  reviewedBy    User?        @relation("ReviewedAnswers", fields: [reviewedById], references: [id])
+  reviewedAt    DateTime?
+}

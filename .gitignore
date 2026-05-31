@@ -1,0 +1,13 @@
+node_modules
+.next
+.env
+.env.local
+dist
+coverage
+*.log
+postgres-data
+backups
+chrome-*
+edge-*
+public/uploads/avatars/*
+!public/uploads/avatars/.gitkeep
