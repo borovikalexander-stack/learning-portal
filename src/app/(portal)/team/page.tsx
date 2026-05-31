@@ -5,6 +5,7 @@ import { notFound, redirect } from "next/navigation";
 import { Avatar } from "@/components/ui/Avatar";
 import { AnimatedNumber } from "@/components/motion/AnimatedNumber";
 import { PageReveal } from "@/components/motion/PageReveal";
+import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { StaggerReveal } from "@/components/motion/StaggerReveal";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { PERIOD_LABELS, type PeriodKey } from "@/lib/admin/analytics";
@@ -197,7 +198,8 @@ export default async function TeamDashboardPage({ searchParams }: TeamPageProps)
         )}
       </section>
 
-      <section className="grid grid-2" data-reveal>
+      <ScrollReveal className="stack">
+      <section className="grid grid-2" data-scroll-reveal>
         <article className="card stack motion-card">
           <div className="row" style={{ justifyContent: "space-between" }}>
             <div>
@@ -233,7 +235,7 @@ export default async function TeamDashboardPage({ searchParams }: TeamPageProps)
         </article>
       </section>
 
-      <section className="card stack motion-card" data-reveal>
+      <section className="card stack motion-card" data-scroll-reveal>
         <div className="row" style={{ justifyContent: "space-between" }}>
           <div>
             <h3>Зависшие менеджеры</h3>
@@ -281,7 +283,7 @@ export default async function TeamDashboardPage({ searchParams }: TeamPageProps)
         )}
       </section>
 
-      <section className="card stack motion-card" data-reveal>
+      <section className="card stack motion-card" data-scroll-reveal>
         <div className="row" style={{ justifyContent: "space-between" }}>
           <div>
             <h3>Свежая активность</h3>
@@ -315,6 +317,7 @@ export default async function TeamDashboardPage({ searchParams }: TeamPageProps)
           </div>
         )}
       </section>
+      </ScrollReveal>
       </div>
     </PageReveal>
   );
@@ -323,8 +326,8 @@ export default async function TeamDashboardPage({ searchParams }: TeamPageProps)
 function CourseLine({ course, rank, variant }: { course: RopCourseEfficiency; rank: number; variant: "top" | "worst" }) {
   const rankStyle =
     variant === "top"
-      ? { background: "var(--accent-soft)", color: "#006B52" }
-      : { background: "var(--danger-soft)", color: "#B11E22" };
+      ? { background: "var(--success-soft)", color: "var(--success-text)" }
+      : { background: "var(--danger-soft)", color: "var(--danger)" };
   return (
     <div className="course-line" style={{ cursor: "default" }}>
       <div className="course-line-rank" style={rankStyle}>{rank}</div>

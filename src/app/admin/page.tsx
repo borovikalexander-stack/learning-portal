@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Avatar } from "@/components/ui/Avatar";
 import { AnimatedNumber } from "@/components/motion/AnimatedNumber";
 import { PageReveal } from "@/components/motion/PageReveal";
+import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { StaggerReveal } from "@/components/motion/StaggerReveal";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { getAdminDashboard, normalizePeriod, PERIOD_LABELS, type PeriodKey } from "@/lib/admin/analytics";
@@ -285,8 +286,9 @@ export default async function AdminDashboardPage({ searchParams }: AdminPageProp
         )}
       </section>
 
+      <ScrollReveal className="stack">
       {/* Top / Worst courses */}
-      <section className="grid grid-2" data-reveal>
+      <section className="grid grid-2" data-scroll-reveal>
         <article className="card stack motion-card">
           <div className="row" style={{ justifyContent: "space-between" }}>
             <div>
@@ -331,7 +333,7 @@ export default async function AdminDashboardPage({ searchParams }: AdminPageProp
       </section>
 
       {/* Stuck managers */}
-      <section className="card stack motion-card" data-reveal>
+      <section className="card stack motion-card" data-scroll-reveal>
         <div>
           <h3>Зависшие менеджеры</h3>
           <p className="text-muted">Без активности более 7 дней или прогресс ниже 50%</p>
@@ -378,7 +380,7 @@ export default async function AdminDashboardPage({ searchParams }: AdminPageProp
       </section>
 
       {/* Recent activity feed */}
-      <section className="card stack motion-card" data-reveal>
+      <section className="card stack motion-card" data-scroll-reveal>
         <div className="row" style={{ justifyContent: "space-between" }}>
           <div>
             <h3>Свежая активность</h3>
@@ -419,6 +421,7 @@ export default async function AdminDashboardPage({ searchParams }: AdminPageProp
           </div>
         )}
       </section>
+      </ScrollReveal>
       </div>
     </PageReveal>
   );
@@ -435,8 +438,8 @@ function CourseLine({
 }) {
   const rankStyle =
     variant === "top"
-      ? { background: "var(--accent-soft)", color: "#006B52" }
-      : { background: "var(--danger-soft)", color: "#B11E22" };
+      ? { background: "var(--success-soft)", color: "var(--success-text)" }
+      : { background: "var(--danger-soft)", color: "var(--danger)" };
   return (
     <Link href={`/admin/courses/${course.id}`} className="course-line">
       <div className="course-line-rank" style={rankStyle}>

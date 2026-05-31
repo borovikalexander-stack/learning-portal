@@ -16,7 +16,7 @@ export function AppSidebar({ items, activeHref, footer }: AppSidebarProps) {
   return (
     <aside className="app-sidebar">
       <div className="app-sidebar-logo" title="DSS Group">
-        <Image alt="DSS Group" height={28} priority src="/dss-logo.svg" width={44} />
+        <Image alt="DSS Group" height={38} priority src="/dss-logo-white.svg" width={60} />
       </div>
       <nav className="app-sidebar-nav" aria-label="Основная навигация">
         {items.map((item) => {

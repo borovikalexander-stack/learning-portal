@@ -30,17 +30,16 @@ export function StaggerReveal({
       if (!items.length) return;
 
       if (reducedMotion || items.length > maxAnimatedItems) {
-        gsap.set(items, { opacity: 1, y: 0, scale: 1, clearProps: "transform" });
+        gsap.set(items, { opacity: 1, clearProps: "transform" });
         return;
       }
 
       gsap.from(items, {
         opacity: 0,
-        y: 12,
-        scale: 0.98,
-        duration: 0.4,
-        ease: "power3.out",
-        stagger: 0.045
+        duration: 0.35,
+        ease: "power1.out",
+        stagger: 0.04,
+        clearProps: "opacity"
       });
     },
     { scope, dependencies: [reducedMotion, itemSelector, maxAnimatedItems] }

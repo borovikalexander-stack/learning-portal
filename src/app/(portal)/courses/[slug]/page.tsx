@@ -2,6 +2,7 @@ import { CheckCircle2, Clock3, GraduationCap, LockKeyhole, Play } from "lucide-r
 import type { Route } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { AnimatedBar } from "@/components/motion/AnimatedBar";
 import { PageReveal } from "@/components/motion/PageReveal";
 import { StaggerReveal } from "@/components/motion/StaggerReveal";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -70,6 +71,10 @@ export default async function CoursePage({ params }: CoursePageProps) {
           <span className="badge badge-dark">Прогресс {detail.progressPercent}%</span>
         </div>
 
+        <div data-reveal>
+          <AnimatedBar label={`Прогресс курса ${detail.progressPercent}%`} value={detail.progressPercent} />
+        </div>
+
         {finalTest ? (
           <section className={`card stack motion-card ${allLessonsCompleted ? "card-blue" : ""}`} data-reveal>
             <div className="row" style={{ gap: 12, alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap" }}>
@@ -101,8 +106,8 @@ export default async function CoursePage({ params }: CoursePageProps) {
                 <div
                   className="lesson-status-icon"
                   style={{
-                    background: lesson.isCompleted ? "var(--accent-soft)" : "var(--bg)",
-                    color: lesson.isCompleted ? "#006B52" : lesson.isLocked ? "var(--text-muted)" : "var(--text)"
+                    background: lesson.isCompleted ? "var(--success-soft)" : lesson.isLocked ? "var(--surface-soft)" : "var(--accent-soft)",
+                    color: lesson.isCompleted ? "var(--success-text)" : lesson.isLocked ? "var(--text-muted)" : "var(--primary)"
                   }}
                 >
                   {lesson.isCompleted ? <CheckCircle2 size={20} /> : lesson.isLocked ? <LockKeyhole size={20} /> : <Play size={20} />}

@@ -13,12 +13,12 @@ export function RegisterForm({ action, departments }: RegisterFormProps) {
   const [state, formAction] = useFormState(action, {});
 
   return (
-    <div className="card auth-card">
+    <div className="card auth-card auth-card-wide">
       <form action={formAction}>
         <div className="auth-card-head">
           <p className="eyebrow">Заявка</p>
           <h2>Получить доступ</h2>
-          <p className="text-muted">Заполните данные, администратор проверит заявку и назначит отдел.</p>
+          <p className="text-muted">Заполните данные. После вводного видео заявка уйдёт руководителю отдела на подтверждение.</p>
         </div>
         <div className="grid-2">
           <div className="field">
@@ -56,7 +56,7 @@ export function RegisterForm({ action, departments }: RegisterFormProps) {
           </select>
         </div>
         {state.error ? <p className="badge badge-danger">{state.error}</p> : null}
-        <button className="btn btn-primary" style={{ width: "100%" }} type="submit">
+        <button className="btn btn-primary btn-block" type="submit">
           Отправить заявку
         </button>
         <p className="auth-card-footer">

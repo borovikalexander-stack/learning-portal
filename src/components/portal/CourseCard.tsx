@@ -1,7 +1,7 @@
 import { Clock3 } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
-import { MotionProgressBar } from "@/components/motion/MotionProgressBar";
+import { AnimatedBar } from "@/components/motion/AnimatedBar";
 import type { DashboardCourse } from "@/lib/portal/dashboard";
 
 type CourseCardProps = {
@@ -34,7 +34,7 @@ export function CourseCard({ course }: CourseCardProps) {
 
       <footer className="stack" style={{ gap: 12 }}>
         <div>
-          <MotionProgressBar color={course.accent} label={`Прогресс курса ${course.progressPercent}%`} value={course.progressPercent} />
+          <AnimatedBar color={course.accent} label={`Прогресс курса ${course.progressPercent}%`} value={course.progressPercent} />
           <p className="text-muted" style={{ marginTop: 8, fontSize: 13 }}>
             {course.progressPercent}% пройдено
           </p>

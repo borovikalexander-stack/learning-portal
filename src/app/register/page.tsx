@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { redirect } from "next/navigation";
+import { AuthShowcase } from "@/components/auth/AuthShowcase";
 import { getSession } from "@/lib/auth/session";
 import { registerAction } from "@/lib/auth/registration";
 import { prisma } from "@/lib/db";
@@ -19,18 +19,7 @@ export default async function RegisterPage() {
 
   return (
     <main className="auth-shell">
-      <section className="auth-brand-panel">
-        <div className="auth-brand">
-          <span className="auth-brand-logo">
-            <Image alt="DSS Group" height={40} priority src="/dss-logo.svg" width={88} />
-          </span>
-        </div>
-        <div className="auth-copy">
-          <p className="eyebrow">Корпоративное обучение</p>
-          <h1>Платформа развития команды продаж</h1>
-          <p>Курсы для отделов компании. Видео, материалы, проверка знаний.</p>
-        </div>
-      </section>
+      <AuthShowcase />
       <section className="auth-form-panel">
         <RegisterForm action={registerAction} departments={departments} />
       </section>

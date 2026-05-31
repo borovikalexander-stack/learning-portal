@@ -17,7 +17,7 @@ export function LoginForm({ action }: LoginFormProps) {
         <div className="auth-card-head">
           <p className="eyebrow">Вход</p>
           <h2>С возвращением</h2>
-          <p className="text-muted">Введите рабочий email и пароль</p>
+          <p className="text-muted">Введите рабочий email и пароль, чтобы продолжить обучение.</p>
         </div>
         <div className="field">
           <label htmlFor="email">Email</label>
@@ -28,7 +28,7 @@ export function LoginForm({ action }: LoginFormProps) {
           <input className="input" id="password" name="password" type="password" autoComplete="current-password" required />
         </div>
         {state.error ? <p className="badge badge-danger">{state.error}</p> : null}
-        <button className="btn btn-primary" style={{ width: "100%" }} type="submit">
+        <button className="btn btn-primary btn-block" type="submit">
           Войти
         </button>
         <p className="auth-card-footer">

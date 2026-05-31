@@ -23,16 +23,16 @@ export function PageReveal({ children, className }: PageRevealProps) {
       const targets = items.length ? items : [root];
 
       if (reducedMotion) {
-        gsap.set(targets, { opacity: 1, y: 0, clearProps: "transform" });
+        gsap.set(targets, { opacity: 1, clearProps: "transform" });
         return;
       }
 
       gsap.from(targets, {
         opacity: 0,
-        y: 14,
-        duration: 0.45,
-        ease: "power2.out",
-        stagger: 0.06
+        duration: 0.35,
+        ease: "power1.out",
+        stagger: 0.05,
+        clearProps: "opacity"
       });
     },
     { scope, dependencies: [reducedMotion] }

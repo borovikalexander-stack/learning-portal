@@ -1,6 +1,7 @@
 import { Ban, CheckCircle2, Circle, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { grantCourseAccessAction, revokeCourseAccessAction } from "@/lib/admin/access";
@@ -185,7 +186,8 @@ export default async function AdminUserDetailPage({ params }: AdminUserDetailPag
         </article>
       </section>
 
-      <section className="card stack">
+      <ScrollReveal className="stack">
+      <section className="card stack" data-scroll-reveal>
         <div>
           <h3>Настройки пользователя</h3>
           <p className="text-muted">Роль и отдел влияют на главный экран и дефолтные курсы</p>
@@ -249,7 +251,7 @@ export default async function AdminUserDetailPage({ params }: AdminUserDetailPag
         </div>
       </section>
 
-      <section className="card stack">
+      <section className="card stack" data-scroll-reveal>
         <div>
           <h3>Прогресс по курсам</h3>
           <p className="text-muted">Курсы, уроки и фактические отметки прохождения</p>
@@ -288,7 +290,7 @@ export default async function AdminUserDetailPage({ params }: AdminUserDetailPag
         )}
       </section>
 
-      <section className="card stack">
+      <section className="card stack" data-scroll-reveal>
         <div>
           <h3>История прохождения</h3>
           <p className="text-muted">Последние 20 событий по урокам и курсам</p>
@@ -314,7 +316,7 @@ export default async function AdminUserDetailPage({ params }: AdminUserDetailPag
         )}
       </section>
 
-      <section className="card stack">
+      <section className="card stack" data-scroll-reveal>
         <div>
           <h3>Управление доступом</h3>
           <p className="text-muted">Ручное назначение и снятие курсов</p>
@@ -371,6 +373,7 @@ export default async function AdminUserDetailPage({ params }: AdminUserDetailPag
           <p className="text-muted">Все опубликованные курсы уже назначены этому менеджеру.</p>
         ) : null}
       </section>
+      </ScrollReveal>
     </div>
   );
 }

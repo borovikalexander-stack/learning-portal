@@ -1,9 +1,9 @@
-import { CheckCircle2, Clock, XCircle } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
 import { PageReveal } from "@/components/motion/PageReveal";
 import { StaggerReveal } from "@/components/motion/StaggerReveal";
 import type { AttemptResult } from "@/lib/portal/testing";
+import { ScoreRing } from "./ScoreRing";
 
 type Props = {
   result: AttemptResult;
@@ -57,13 +57,7 @@ export function AttemptResultView({ result, backHref, retryHref }: Props) {
     <PageReveal className="stack">
       <section className={`card stack motion-card ${attempt.passed ? "card-accent" : hasPending ? "card-yellow" : ""}`} data-reveal>
         <div className="row" style={{ gap: 16, alignItems: "center" }}>
-          {attempt.passed ? (
-            <CheckCircle2 size={48} />
-          ) : hasPending ? (
-            <Clock size={48} />
-          ) : (
-            <XCircle size={48} />
-          )}
+          <ScoreRing percent={attempt.scorePercent} passed={attempt.passed} pending={hasPending} />
           <div>
             <h2>
               {attempt.passed
