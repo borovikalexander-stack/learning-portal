@@ -1,19 +1,32 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
+
+const query = "(prefers-reduced-motion: reduce)";
+
+function subscribe(callback: () => void) {
+  if (typeof window === "undefined" || !("matchMedia" in window)) {
+    return () => {};
+  }
+
+  const media = window.matchMedia(query);
+  media.addEventListener("change", callback);
+
+  return () => media.removeEventListener("change", callback);
+}
+
+function getSnapshot() {
+  if (typeof window === "undefined" || !("matchMedia" in window)) {
+    return true;
+  }
+
+  return window.matchMedia(query).matches;
+}
+
+function getServerSnapshot() {
+  return true;
+}
 
 export function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReduced(media.matches);
-
-    update();
-    media.addEventListener("change", update);
-
-    return () => media.removeEventListener("change", update);
-  }, []);
-
-  return reduced;
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }

@@ -2613,4 +2613,18 @@ a.kpi-hint:hover {
   .test-option:has(input:checked) {
     transform: none;
   }
+
+  .app-sidebar-nav .app-sidebar-link,
+  .skeleton,
+  .loading-spinner {
+    animation: none !important;
+  }
+
+  .skeleton {
+    background: var(--border);
+  }
+
+  .loading-spinner {
+    border-top-color: var(--border-strong);
+  }
 }

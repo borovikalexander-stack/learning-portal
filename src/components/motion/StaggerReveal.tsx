@@ -9,9 +9,15 @@ type StaggerRevealProps = {
   children: ReactNode;
   className?: string;
   itemSelector?: string;
+  maxAnimatedItems?: number;
 };
 
-export function StaggerReveal({ children, className, itemSelector = "[data-stagger-item]" }: StaggerRevealProps) {
+export function StaggerReveal({
+  children,
+  className,
+  itemSelector = "[data-stagger-item]",
+  maxAnimatedItems = 80
+}: StaggerRevealProps) {
   const scope = useRef<HTMLDivElement>(null);
   const reducedMotion = usePrefersReducedMotion();
 
@@ -23,7 +29,7 @@ export function StaggerReveal({ children, className, itemSelector = "[data-stagg
       const items = gsap.utils.toArray<HTMLElement>(root.querySelectorAll(itemSelector));
       if (!items.length) return;
 
-      if (reducedMotion) {
+      if (reducedMotion || items.length > maxAnimatedItems) {
         gsap.set(items, { opacity: 1, y: 0, scale: 1, clearProps: "transform" });
         return;
       }
@@ -37,7 +43,7 @@ export function StaggerReveal({ children, className, itemSelector = "[data-stagg
         stagger: 0.045
       });
     },
-    { scope, dependencies: [reducedMotion, itemSelector] }
+    { scope, dependencies: [reducedMotion, itemSelector, maxAnimatedItems] }
   );
 
   return (

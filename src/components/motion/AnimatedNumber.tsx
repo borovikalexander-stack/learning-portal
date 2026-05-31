@@ -12,6 +12,8 @@ type AnimatedNumberProps = {
   className?: string;
 };
 
+// Use this only for isolated KPI-scale numbers. Tables and long lists should render
+// plain text to avoid many concurrent tweens and unnecessary state updates.
 export function AnimatedNumber({ value, prefix = "", suffix = "", className }: AnimatedNumberProps) {
   const [displayValue, setDisplayValue] = useState(value);
   const reducedMotion = usePrefersReducedMotion();
